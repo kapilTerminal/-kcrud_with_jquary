@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyGpt | Smart Study Hub</title>
+
+    <!-- SEO & Metadata -->
+    <meta name="keywords"
+        content="Study Management, Task Allocation, Student Productivity, jQuery, Portfolio, Smart Management" />
+    <meta name="description"
+        content="StudyGpt - A smart, vibrant manager for tracking studies, tasks, and student schedules." />
+    <meta name="author" content="Kapil Karki" />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Outfit:wght@300;600&family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="app-container">
+        <!-- Sidebar / Header -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fa-solid fa-hotel"></i>
+                <h1>StudyGpt</h1>
+                <button id="themeToggle" class="btn-icon"
+                    style="margin-left: auto; background: transparent; border: 1px solid var(--border-color); width: 32px; height: 32px;"
+                    title="Toggle Dark Mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="card stats-card">
+                <h3>Occupancy Status</h3>
+                <div class="amount" id="occupancyRate">0%</div>
+                <div class="budget-info">
+                    <span>Rooms: <span id="totalRoomsStat">0</span></span>
+                    <span>Beds: <span id="totalBedsStat">0</span></span>
+                </div>
+
+                <!-- Occupancy Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar" id="occupancyBar" style="width: 0%"></div>
+                </div>
+                <p class="budget-status" id="occupancyStatus">Empty</p>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="card quick-stats">
+                <h3><i class="fa-solid fa-gauge-high"></i> Dashboard Summary</h3>
+                <div class="stat-row">
+                    <span class="stat-label">Total Students</span>
+                    <span class="stat-value" id="totalStudentsStat">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Available Beds</span>
+                    <span class="stat-value" id="availableBedsStat">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Occupied Beds</span>
+                    <span class="stat-value" id="occupiedBedsStat">0</span>
+                </div>
+
+                <!-- Export Actions -->
+                <div class="export-actions" style="margin-top: 1rem;">
+                    <button onclick="exportToCSV()" class="btn-export" title="Export to CSV">
+                        <i class="fa-solid fa-file-csv"></i> Export Data
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Management Tabs/Sections -->
+            <div class="card add-section">
+                <div class="tab-header"
+                    style="display: flex; gap: 2rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color);">
+                    <h2 class="tab-btn active" data-target="roomSection"
+                        style="cursor: pointer; padding-bottom: 0.5rem; border-bottom: 3px solid var(--secondary);">
+                        <i class="fa-solid fa-door-open"></i> Rooms
+                    </h2>
+                    <h2 class="tab-btn" data-target="studentSection" style="cursor: pointer; padding-bottom: 0.5rem;">
+                        <i class="fa-solid fa-user-graduate"></i> Students
+                    </h2>
+                </div>
+
+                <!-- Room Form -->
+                <div id="roomSection" class="management-section">
+                    <form id="roomForm">
+                        <div class="form-grid">
+                            <div class="input-group">
+                                <label>Room Number</label>
+                                <input type="text" id="roomNoInput" placeholder="e.g. 101" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Capacity</label>
+                                <input type="number" id="capacityInput" placeholder="Total Beds" min="1" max="10"
+                                    required>
+                            </div>
+                            <div class="input-group">
+                                <label>Room Type</label>
+                                <select id="roomTypeInput" required>
+                                    <option value="Single">Single</option>
+                                    <option value="Double">Double</option>
+                                    <option value="Triple">Triple</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-add">Add Room</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Student Form -->
+                <div id="studentSection" class="management-section" style="display: none;">
+                    <form id="studentForm">
+                        <div class="form-grid">
+                            <div class="input-group" style="flex: 2 1 250px;">
+                                <label>Full Name</label>
+                                <input type="text" id="studentNameInput" placeholder="Ram Bahadur" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Course</label>
+                                <input type="text" id="courseInput" placeholder="BSc CSIT" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Gender</label>
+                                <select id="genderInput" required>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-add">Register Student</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- List Section -->
+            <section class="list-section">
+                <div class="section-header">
+                    <h2 id="listTitle">Room Inventory</h2>
+                    <div class="controls" style="display: flex; gap: 1rem; align-items: center;">
+                        <div class="search-box">
+                            <i class="fa-solid fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search..." style="padding-left: 2rem;">
+                        </div>
+                        <select id="filterType">
+                            <option value="all">All Status</option>
+                            <option value="available">Available</option>
+                            <option value="partially">Partially Filled</option>
+                            <option value="full">Full Rooms</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Dynamic List Container -->
+                <div class="transaction-list" id="mainList">
+                    <!-- Dynamic Content -->
+                    <div class="empty-state">
+                        <i class="fa-solid fa-info-circle"></i>
+                        <p>No data available. Add rooms or students above.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit/Assign Modal -->
+    <div id="mainModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalTitle">Edit Item</h2>
+            <div id="modalBody">
+                <!-- Replaced dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <i class="fa-solid fa-circle-exclamation"
+                style="font-size: 3rem; color: var(--danger); margin-bottom: 1rem;"></i>
+            <h2>Are you sure?</h2>
+            <p id="confirmMessage" style="margin-bottom: 2rem; color: var(--text-muted);">This action cannot be undone.
+            </p>
+            <div style="display: flex; gap: 1rem;">
+                <button id="confirmCancel" class="btn-export" style="background: transparent;">Cancel</button>
+                <button id="confirmAction" class="btn-save" style="background: var(--danger); margin-top: 0;">Confirm
+                    Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery (CDN) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
